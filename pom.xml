@@ -5,7 +5,7 @@
   <groupId>com.github.tsiangleo.qrpc</groupId>
   <artifactId>qrpc</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
 
   <name>qrpc</name>
   <url>https://github.com/tsiangleo/qrpc</url>
@@ -13,51 +13,10 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
-		</dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.6.1</version>
-		</dependency>
-		
-		<!-- 
-		<dependency>
-		    <groupId>log4j</groupId>
-		    <artifactId>log4j</artifactId>
-		    <version>1.2.16</version>
-		</dependency>
-		
-		<dependency>
-		    <groupId>org.slf4j</groupId>
-		    <artifactId>slf4j-log4j12</artifactId>
-		    <version>1.6.1</version>
-		</dependency>
-		 -->
-		 
-		<dependency>
-		    <groupId>org.apache.zookeeper</groupId>
-		    <artifactId>zookeeper</artifactId>
-		    <version>3.4.6</version>
-		</dependency>
-		
-		<dependency>
-		    <groupId>com.101tec</groupId>
-		    <artifactId>zkclient</artifactId>
-		    <version>0.4</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.netty</groupId>
-			<artifactId>netty-all</artifactId>
-			<version>4.0.36.Final</version>
-		</dependency>
-
-	</dependencies>
+    <modules>
+        <module>qrpc-core</module>
+        <module>qrpc-exam</module>
+    </modules>
+    
 </project>
