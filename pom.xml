@@ -16,7 +16,7 @@
 
     <modules>
         <module>qrpc-core</module>
-        <module>qrpc-exam</module>
+        <module>qrpc-example</module>
     </modules>
     
 </project>
