@@ -1,5 +1,5 @@
 # qrpc
-a simple rpc
+a simple rpc which supports synchronous call, asynchronous call, callback, future and timeout.
 
 ## feature
 - 支持异步调用，提供future、callback的能力。
