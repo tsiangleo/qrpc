@@ -42,6 +42,7 @@ public class ExceptionDemoTest {
 		 Calculator calculator2 = (Calculator) new RpcConsumerProxy()
 		 .serviceInterface(Calculator.class)
 		 .version("1.0")
+		 .zk("localhost:2181", "/qrpc-test01")
 		 .group("123")
 		 .async(true)
 		 .bind("localhost", 9090)
@@ -73,6 +74,7 @@ public class ExceptionDemoTest {
 		//同步测试
 		 Calculator calculator = (Calculator) new RpcConsumerProxy()
 		 .serviceInterface(Calculator.class)
+		 .zk("localhost:2181", "/qrpc-test01")
 		 .version("1.0")
 		 .group("123")
 		 .async(false)

@@ -8,6 +8,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.tsiangleo.qrpc.consumer.RpcConsumerProxy;
 import com.github.tsiangleo.qrpc.consumer.RpcInvokeHook;
 import com.github.tsiangleo.qrpc.util.ZKConfig;
 
@@ -29,14 +30,21 @@ public class RpcServer {
 
 	private boolean connetToRegistryCenter;
 
+	private  String zkServerList;
+	private  String zNodeRootPath;
+	
 	/**
 	 * 
 	 * @param port 向外提供的服务端口号
 	 * @param connectToZk 是否将提供的服务注册到服务注册查找中心。
+	 * @param zkServerList - 格式如下: "192.168.1.106:2181";
+	 * @param zNodeRootPath - 格式如下:"/qrpc-test01"
 	 */
-	public RpcServer(int port,boolean connectToZk) {
+	public RpcServer(int port,boolean connectToZk,String zkServerList,String zNodeRootPath) {
 		this.port = port;
 		this.connetToRegistryCenter = connectToZk;
+		this.zkServerList = zkServerList;
+		this.zNodeRootPath = zNodeRootPath;
 	}
 
 
@@ -48,13 +56,13 @@ public class RpcServer {
 		if (connetToRegistryCenter) {
 			if (rpcProviderZKSynchronizer == null) {
 				rpcProviderZKSynchronizer = new RpcProviderZKSynchronizer(
-						ZKConfig.zNodeRootPath, ZKConfig.zkServerList);
+						zNodeRootPath, zkServerList);
 			}
 			rpcProviderZKSynchronizer.registerService(
 					serviceInterface.getCanonicalName(), port);
 		}
 	}
-
+	
 	public void setHook(RpcInvokeHook hook) {
 		rpcInvokeHook = hook;
 

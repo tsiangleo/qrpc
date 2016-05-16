@@ -12,14 +12,18 @@ import com.github.tsiangleo.qrpc.util.ZKConfig;
 public class ServiceMonitor {
 
 	//服务名->服务地址之间的映射
-	private static Map<String, List<String>> serviceProviderMap = new ConcurrentHashMap<String, List<String>>();
+	private  Map<String, List<String>> serviceProviderMap = new ConcurrentHashMap<String, List<String>>();
 	//哪些服务被哪些客户端调用了。
-	private static Map<String, List<String>> serviceConsumerMap = new ConcurrentHashMap<String, List<String>>();
-	private static List<String> serviceList; //所有的服务列表
-	private static ZkClient zkClient;
-
-
-	static{
+	private  Map<String, List<String>> serviceConsumerMap = new ConcurrentHashMap<String, List<String>>();
+	private  List<String> serviceList; //所有的服务列表
+	private  ZkClient zkClient;
+	private  String zkServerList;
+	private  String zNodeRootPath;
+	
+	public ServiceMonitor(String zkServerList,String zNodeRootPath)
+	{
+		this.zkServerList = zkServerList;
+		this.zNodeRootPath = zNodeRootPath;
 		initServiceList();
 		for(String service: serviceList){
 			initConsumerList(service);
@@ -27,34 +31,34 @@ public class ServiceMonitor {
 		}
 	}
 	
-	private static void initServiceList(){
+	private  void initServiceList(){
 		if(zkClient == null){
-			zkClient = new ZkClient(ZKConfig.zkServerList);
-			System.out.println("ServiceMonitor zkclient going to connect to "+ZKConfig.zNodeRootPath);
+			zkClient = new ZkClient(zkServerList);
+			System.out.println("ServiceMonitor zkclient going to connect to "+zNodeRootPath);
 		}
 		
-		List<String> list = zkClient.getChildren(ZKConfig.zNodeRootPath);
+		List<String> list = zkClient.getChildren(zNodeRootPath);
 		if(list != null && !list.isEmpty()){
 			serviceList = list;
 		}
 		
-		zkClient.subscribeChildChanges(ZKConfig.zNodeRootPath, new IZkChildListener(){
+		zkClient.subscribeChildChanges(zNodeRootPath, new IZkChildListener(){
 			public void handleChildChange(String parentPath, List<String> childrens)
 					throws Exception {
-				serviceList = zkClient.getChildren(ZKConfig.zNodeRootPath);
+				serviceList = zkClient.getChildren(zNodeRootPath);
 				onServiceListChange(parentPath,childrens);
 			}
 
 			});
 	}
 	
-	private static void initConsumerList(final String serviceName) {
+	private  void initConsumerList(final String serviceName) {
 		if(zkClient == null){
-			zkClient = new ZkClient(ZKConfig.zkServerList);
-			System.out.println("ServiceMonitor zkclient going to connect to "+ZKConfig.zNodeRootPath);
+			zkClient = new ZkClient(zkServerList);
+			System.out.println("ServiceMonitor zkclient going to connect to "+zNodeRootPath);
 		}
 		
-		String consumerPath = ZKConfig.zNodeRootPath+"/"+serviceName+"/consumer";
+		String consumerPath = zNodeRootPath+"/"+serviceName+"/consumer";
 		if(!zkClient.exists(consumerPath)){
 			return;
 		}
@@ -73,13 +77,13 @@ public class ServiceMonitor {
 		
 	}
 	
-	private static void  initProviderList(final String serviceName) {
+	private  void  initProviderList(final String serviceName) {
 		if(zkClient == null){
-			zkClient = new ZkClient(ZKConfig.zkServerList);
-			System.out.println("ServiceMonitor zkclient going to connect to "+ZKConfig.zNodeRootPath);
+			zkClient = new ZkClient(zkServerList);
+			System.out.println("ServiceMonitor zkclient going to connect to "+zNodeRootPath);
 		}
 		
-		String providerPath = ZKConfig.zNodeRootPath+"/"+serviceName+"/provider";
+		String providerPath = zNodeRootPath+"/"+serviceName+"/provider";
 		if(!zkClient.exists(providerPath)){
 			return;
 		}
@@ -98,32 +102,32 @@ public class ServiceMonitor {
 		
 	}
 	
-	public static void onServiceListChange(String parentPath,List<String> childrens) {
+	public  void onServiceListChange(String parentPath,List<String> childrens) {
 		System.out.println("ServiceList has Changed to "+serviceList);
 	}
 	
-	public static void onConsumerListChange(String serviceName,String parentPath,List<String> childrens) {
+	public  void onConsumerListChange(String serviceName,String parentPath,List<String> childrens) {
 		System.out.println("the consumer of "+parentPath+" has Changed to "+serviceConsumerMap.get(serviceName));
 	}
 	
-	public static void onProviderListChange(String serviceName,String parentPath,List<String> childrens) {
+	public  void onProviderListChange(String serviceName,String parentPath,List<String> childrens) {
 		System.out.println("the provider of "+parentPath+" has Changed to "+serviceProviderMap.get(serviceName));
 		
 	}
 	
-	public static List<String> getServiceList() {
+	public  List<String> getServiceList() {
 		return serviceList;
 	}
 	
-	public static List<String> getConsumerList(String serviceName) {
+	public  List<String> getConsumerList(String serviceName) {
 		return serviceConsumerMap.get(serviceName);
 	}
 	
-	public static List<String> getProviderList(String serviceName) {
+	public  List<String> getProviderList(String serviceName) {
 		return serviceProviderMap.get(serviceName);
 	}
 	
-	public static void  sumerize() {
+	public  void  sumerize() {
 		System.out.println("===================== sumerize start =======================");
 		System.out.println("ServiceList are:"+serviceList);
 		for(String service: serviceList){

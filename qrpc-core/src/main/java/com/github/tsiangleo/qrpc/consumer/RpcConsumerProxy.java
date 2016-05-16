@@ -22,6 +22,9 @@ public class RpcConsumerProxy {
 
 	private RpcCallback rpcCallback;
 	
+	private static String zkServerList;
+	private static String zNodeRootPath;
+	
 	
 	/**
 	 * 设置服务接口
@@ -53,6 +56,25 @@ public class RpcConsumerProxy {
 	 */
 	public RpcConsumerProxy hook(RpcInvokeHook rpcInvokeHook) {
 		this.rpcInvokeHook = rpcInvokeHook;
+		return this;
+	}
+	
+	
+	/**
+	 * 设置钩子，从设置以后对该服务的每个方法调用前后都会调用钩子方法。
+	 * @param rpcInvokeHook
+	 * @return
+	 */
+	
+	/**
+	 * 
+	 * @param zkServerList - 格式如下: "192.168.1.106:2181";
+	 * @param zNodeRootPath - 格式如下:"/qrpc-test01"
+	 * @return
+	 */
+	public RpcConsumerProxy zk(String zkServerList,String zNodeRootPath) {
+		this.zkServerList = zkServerList;
+		this.zNodeRootPath = zNodeRootPath;
 		return this;
 	}
 	
@@ -115,7 +137,7 @@ public class RpcConsumerProxy {
 	public Object create() {
 		//在返回代理之前，要寻址路由。
 		if(rpcServerAddress == null){	//用户没设置rpc服务器的地址，则去服务注册查找中心查找。
-			 rpcServerAddress = RpcServiceRouter.
+			 rpcServerAddress = RpcServiceRouter.instance(zNodeRootPath,zkServerList).
 					 getAddressByServiceName(serviceInterface.getCanonicalName());
 		}
 		

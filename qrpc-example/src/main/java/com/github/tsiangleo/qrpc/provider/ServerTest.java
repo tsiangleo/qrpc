@@ -31,8 +31,7 @@ public class ServerTest {
 		};
 
 		// 创建一个rpc服务器
-		RpcServer rpcServer = new RpcServer(9090,false);
-
+		RpcServer rpcServer = new RpcServer(9090,true,"localhost:2181", "/qrpc-test01");
 		// 设置该rpc服务器提供的服务
 		rpcServer.addServiceInterfaceAndProvider(Calculator.class,
 				new CalculatorImpl());

@@ -55,6 +55,7 @@ public class CallBackDemo {
 				.serviceInterface(Calculator.class).version("1.0").group("123")
 				.async(true)//异步模式
 				.bind("localhost", 9090)
+				.zk("localhost:2181", "/qrpc-test01")
 				.callBack(rpcCallback)
 				.create();
 	

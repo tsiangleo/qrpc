@@ -53,6 +53,7 @@ public class HookDemo {
 				.serviceInterface(Hello.class).version("1.0").group("123")
 				.async(false) //同步模式
 				.bind("localhost", 9090)
+				.zk("localhost:2181", "/qrpc-test01")
 				.hook(hook)
 				.create();
 

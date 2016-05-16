@@ -14,9 +14,11 @@ public class ServiceMonitorTest {
 
 	public static void main(String[] args) {
 
+		ServiceMonitor monitor  = new ServiceMonitor("localhost:2181", "/qrpc-test01");
+		
 		while (true) {
 			//每隔2秒打印一下服务中心的即时服务统计信息
-			ServiceMonitor.sumerize();
+			monitor.sumerize();
 			try {
 				TimeUnit.SECONDS.sleep(2);
 			} catch (InterruptedException e) {

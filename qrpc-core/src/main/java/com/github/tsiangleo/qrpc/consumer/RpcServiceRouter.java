@@ -15,16 +15,23 @@ import com.github.tsiangleo.qrpc.util.ZKConfig;
  * @author tsiangleo 2016年4月29日 下午1:21:44
  */
 public class RpcServiceRouter {
-	private static List<String> allService; //所有的服务名列表
-	private static Map<String, List<InetSocketAddress>> serviceProviderMap;
-	private static RpcConsumerZKSynchronizer rpcClientZKSynchronizer;
+	private  List<String> allService; //所有的服务名列表
+	private  Map<String, List<InetSocketAddress>> serviceProviderMap;
+	private  RpcConsumerZKSynchronizer rpcClientZKSynchronizer;
+	private static RpcServiceRouter instance;
+
+	public static RpcServiceRouter instance(String zNodeRootPath,String zkServerList){
+		if(instance == null) {
+			instance  = new RpcServiceRouter(zNodeRootPath,zkServerList);
+		}
+		return instance;
+	}
 	
-	static{
-	
+	private RpcServiceRouter(String zNodeRootPath,String zkServerList){
 		allService = new ArrayList<String>();
 		serviceProviderMap = new ConcurrentHashMap<String, List<InetSocketAddress>>();
 		rpcClientZKSynchronizer = new RpcConsumerZKSynchronizer(
-				ZKConfig.zNodeRootPath,ZKConfig.zkServerList,allService,serviceProviderMap);
+				zNodeRootPath,zkServerList,allService,serviceProviderMap);
 	}
 	
 	/**
@@ -32,7 +39,7 @@ public class RpcServiceRouter {
 	 * @param serviceInterface
 	 * @return
 	 */
-	public static InetSocketAddress getAddressByServiceName(String serviceInterface) {
+	public  InetSocketAddress getAddressByServiceName(String serviceInterface) {
 		List<InetSocketAddress> list = serviceProviderMap.get(serviceInterface);
 		if(list == null || list.isEmpty()){
 			rpcClientZKSynchronizer.getServiceProviderList(serviceInterface);

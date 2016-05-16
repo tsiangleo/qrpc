@@ -36,6 +36,7 @@ public class ClientTest {
 		//服务接口1测试
 		Hello hello = (Hello) new RpcConsumerProxy()
 				.serviceInterface(Hello.class).version("1.0").group("123")
+				.zk("localhost:2181", "/qrpc-test01")
 				.async(false)
 				.create();
 		
@@ -97,6 +98,7 @@ public class ClientTest {
 		//服务接口1测试
 		Hello hello = (Hello) new RpcConsumerProxy()
 				.serviceInterface(Hello.class).version("1.0").group("123")
+				.zk("localhost:2181", "/qrpc-test01")
 				.async(true)
 				.create();
 		
@@ -220,6 +222,7 @@ public class ClientTest {
 		Hello hello = (Hello) new RpcConsumerProxy()
 				.serviceInterface(Hello.class).version("1.0").group("123")
 				.async(false)
+				.zk("localhost:2181", "/qrpc-test01")
 				.bind("localhost", 9090)
 				.create();
 		
@@ -284,6 +287,7 @@ public class ClientTest {
 		Hello hello = (Hello) new RpcConsumerProxy()
 				.serviceInterface(Hello.class).version("1.0").group("123")
 				.async(true)
+				.zk("localhost:2181", "/qrpc-test01")
 				.bind("localhost", 9090)
 				.create();
 		
